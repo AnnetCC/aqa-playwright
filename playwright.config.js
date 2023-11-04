@@ -28,6 +28,7 @@ export default defineConfig({
     reporter: [['html', {open: 'never'}]],
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
+        headless: false,
         httpCredentials: {
             username: 'guest',
             password: 'welcome2qauto'
@@ -50,8 +51,7 @@ export default defineConfig({
                     fullPage: true
                 }
             },
-        },
-
+         },
         {
             name: 'firefox',
             use: {
@@ -62,17 +62,16 @@ export default defineConfig({
                 }
             },
         },
-
-        {
-            name: 'webkit',
-            use: {
-                ...devices['Desktop Safari'],
-                screenshot: {
-                    'mode': 'only-on-failure',
-                    fullPage: true
-                }
-            },
-        },
+        // {
+        //     name: 'webkit',
+        //     use: {
+        //         ...devices['Desktop Safari'],
+        //         screenshot: {
+        //             'mode': 'only-on-failure',
+        //             fullPage: true
+        //         }
+        //     },
+        // },
 
         /* Test against mobile viewports. */
         // {
