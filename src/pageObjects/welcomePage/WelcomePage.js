@@ -10,8 +10,8 @@ export default class WelcomePage extends BasePage {
         this.signUpButton = this._page.locator(this._signUpButton, {hasText: 'Sign up'});
     }
 
-    async signUp(values) {
-      await this.signUpButton.click();
-      return new SignUpForm(this._page, values);
+    async openSignUpPopup() {
+        await this.signUpButton.click();
+        return new SignUpForm(this._page);
     }
 }
