@@ -51,18 +51,17 @@ export default defineConfig({
                     fullPage: true
                 }
             },
-         }
-        // {
-        //     name: 'firefox',
-        //     use: {
-        //         ...devices['Desktop Firefox'],
-        //         screenshot: {
-        //             'mode': 'only-on-failure',
-        //             fullPage: true
-        //         }
-        //     },
-        // },
-
+         },
+        {
+            name: 'firefox',
+            use: {
+                ...devices['Desktop Firefox'],
+                screenshot: {
+                    'mode': 'only-on-failure',
+                    fullPage: true
+                }
+            },
+        },
         // {
         //     name: 'webkit',
         //     use: {
