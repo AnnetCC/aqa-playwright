@@ -27,6 +27,6 @@ export default class UserController {
             data:
                 {userId: userId}
         });
-        expect(deleteUser.status()).toBe(200);
+       await expect(deleteUser.status()).toBe(200);
     }
 }
