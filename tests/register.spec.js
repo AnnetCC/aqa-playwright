@@ -1,12 +1,14 @@
 import {test, expect} from '@playwright/test';
-import {clickSignUpButton, fillInvalidData, fillRegisterForm} from '../src/utils.js';
+import {clickSignUpButton, fillInvalidData, fillRegisterForm, randomEmail, randomPassword} from '../src/utils.js';
 
+const email = randomEmail();
+const password = randomPassword();
 const registerData = {
     signupName: 'Anna',
     signupLastName: 'Hritskova',
-    signupEmail: 'aqa_govorova97@gmail.com',
-    signupPassword: 'MondayM07@',
-    signupRepeatPassword: 'MondayM07@'
+    signupEmail: email,
+    signupPassword: password,
+    signupRepeatPassword: password
 };
 
 test.describe('Test register new user form', () => {

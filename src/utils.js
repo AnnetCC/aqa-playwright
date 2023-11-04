@@ -49,3 +49,11 @@ export async function fillInvalidData(page, sourceData, options) {
     }
     return actualErrors;
 }
+
+export const randomEmail = () => {
+    return 'aqa-' + (Math.random() + 1).toString(36).substring(7) + '@gmail.com';
+}
+
+export const randomPassword = () => {
+    return 'Aqa_' + Math.random().toString(36).substring(7);
+}
