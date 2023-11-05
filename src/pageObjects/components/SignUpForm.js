@@ -1,6 +1,5 @@
 import BaseComponent from "../BaseComponent.js";
 import {expect} from "@playwright/test";
-import * as expectedErrors from "../../../tests/pom/fixtures/register.fixtures.js";
 
 export default class SignUpForm extends BaseComponent {
 
@@ -25,7 +24,7 @@ export default class SignUpForm extends BaseComponent {
         this.errors = this._container.locator(this._errors);
     }
 
-    async #fill(data) {
+    async fill(data) {
         for (const key of Object.keys(data)) {
             await this[key].fill(data[key]);
             await this._page.keyboard.press('Tab');
@@ -34,43 +33,33 @@ export default class SignUpForm extends BaseComponent {
 
     async #validateBorderColor(fields, color) {
         for (const field of fields) {
-            await expect(field).toHaveCSS('border-color', color);
+            await expect(this[field]).toHaveCSS('border-color', color);
         }
     }
 
-    async #validateErrors(expectedErrors) {
+    async validateErrors(fields, expectedErrors) {
+
+        await this.#validateBorderColor(fields, 'rgb(220, 53, 69)');
+
         let actualErrors = [];
         for (let i = 0; i < await this.errors.count(); i++) {
             actualErrors.push(await this.errors.nth(i).innerText());
         }
+
         await expect(this.registerButton, 'Register button should be disabled').toBeDisabled();
         await expect(actualErrors).toEqual(expectedErrors);
     }
 
     async registerNewUser(data) {
-        await this.#fill(data);
+        await this.fill(data);
         await expect(this.registerButton, 'Register button should be enabled').toBeEnabled();
         await this.registerButton.click();
         await expect(this._page, 'user should be redirected to garage page').toHaveURL('/panel/garage');
     }
 
     async verifyExistentUser(data) {
-        await this.#fill(data);
+        await this.fill(data);
         await this.registerButton.click();
         await expect(this.alertDanger).toBeVisible();
-    }
-
-    async fillInvalidData(sourceData, options, expectedErrors) {
-        let newRegisterData = Object.assign({}, sourceData);
-        let redFields = [];
-
-        for (const key of Object.keys(options)) {
-            newRegisterData[key] = options[key];
-            redFields.push(this[key]);
-        }
-
-        await this.#fill(newRegisterData);
-        await this.#validateBorderColor(redFields, 'rgb(220, 53, 69)');
-        await this.#validateErrors(expectedErrors);
     }
 }
