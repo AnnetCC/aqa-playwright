@@ -3,7 +3,6 @@ import WelcomePage from "../src/pageObjects/welcomePage/WelcomePage.js";
 import RandomCreator from "../src/utils/RandomCreator.js";
 import UserController from "../src/pageObjects/controllers/UserController.js";
 import * as expectedErrors from './pom/fixtures/register.fixtures.js'
-import PropertyUtil from "../src/utils/PropertyUtil.js";
 
 test.describe('Test register new user form', () => {
 
@@ -35,13 +34,14 @@ test.describe('Test register new user form', () => {
     });
 
     test('Verify that fields cannot be empty', async () => {
-        const data = PropertyUtil.updateProperties(registerData, {
+        const data =  {
+            ...registerData,
             signupName: '',
             signupLastName: '',
             signupEmail: '',
             signupPassword: '',
             signupRepeatPassword: ''
-        });
+        };
 
         await signUp.fill(data);
         await signUp.validateErrors(Object.keys(data), expectedErrors.EMPTY_FIELDS_ERRORS);
@@ -49,58 +49,63 @@ test.describe('Test register new user form', () => {
 
     test('Verify that error messages are returned if name and last name data are invalid', async () => {
         for (const value of ['a1nna', '123', 'a ns d', 'Anna@', 'Ірина']) {
-            const targetData = {
+            const data = {
+                ...registerData,
                 signupName: value,
                 signupLastName: value
             };
 
-            await signUp.fill(PropertyUtil.updateProperties(registerData, targetData));
-            await signUp.validateErrors(Object.keys(targetData), expectedErrors.INVALID_NAMES_ERRORS);
+            await signUp.fill(data);
+            await signUp.validateErrors(['signupName', 'signupLastName'], expectedErrors.INVALID_NAMES_ERRORS);
         }
     });
 
     test('Verify that error messages are returned if name and last name have incorrect length', async () => {
         for (const value of ['a', 'annahritskovaromanovna']) {
-            const targetData = {
+            const data = {
+                ...registerData,
                 signupName: value,
                 signupLastName: value
             };
 
-            await signUp.fill(PropertyUtil.updateProperties(registerData, targetData));
-            await signUp.validateErrors(Object.keys(targetData), expectedErrors.INVALID_NAMES_LENGTH_ERRORS);
+            await signUp.fill(data);
+            await signUp.validateErrors(['signupName', 'signupLastName'], expectedErrors.INVALID_NAMES_LENGTH_ERRORS);
         }
     });
 
     test('Verify that error message is returned if email input is invalid', async () => {
         for (const value of ['aqa-ksk', 'Anna@', 'a12', 'mysuperpuperemailadress.com', 'aqa adnaced@gmail.com']) {
-            const targetData = {
+            const data = {
+                ...registerData,
                 signupEmail: value
             };
 
-            await signUp.fill(PropertyUtil.updateProperties(registerData, targetData));
-            await signUp.validateErrors(Object.keys(targetData), expectedErrors.INVALID_EMAIL_ERRORS);
+            await signUp.fill(data);
+            await signUp.validateErrors(['signupEmail'], expectedErrors.INVALID_EMAIL_ERRORS);
         }
     });
 
     test('Verify that error messages is returned if password field has invalid value', async () => {
         for (const value of ['a1', '123', 'welcomeguys', 'Welcomeguys12345@@..23', 'Welcom1', '@welcome12', '..33']) {
-            const targetData = {
+            const data = {
+                ...registerData,
                 signupPassword: value,
                 signupRepeatPassword: value
             };
 
-            await signUp.fill(PropertyUtil.updateProperties(registerData, targetData));
-            await signUp.validateErrors(Object.keys(targetData), expectedErrors.INVALID_PASSWORDS_ERRORS);
+            await signUp.fill(data);
+            await signUp.validateErrors(['signupPassword', 'signupRepeatPassword'] , expectedErrors.INVALID_PASSWORDS_ERRORS);
         }
     });
 
     test('Verify that error messages is returned if password field does not not match repeat password field', async () => {
-        const targetData = {
+        const data = {
+            ...registerData,
             signupRepeatPassword: 'MondayM07@12'
         };
 
-        await signUp.fill(PropertyUtil.updateProperties(registerData, targetData));
-        await signUp.validateErrors(Object.keys(targetData), expectedErrors.PASSWORD_MATCH_ERRORS);
+        await signUp.fill(data);
+        await signUp.validateErrors(['signupRepeatPassword'], expectedErrors.PASSWORD_MATCH_ERRORS);
     });
 
     test.afterAll(async ({request}) => {
