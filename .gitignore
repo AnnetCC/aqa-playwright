@@ -4,3 +4,6 @@ node_modules/
 /playwright/.cache/
 tests-examples
 .idea
+.env
+.eslintrc.cjs
+.prettierrc
