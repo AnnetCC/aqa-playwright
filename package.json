@@ -3,13 +3,22 @@
   "version": "1.0.0",
   "description": "Testing with Playwright",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "npx playwright test",
+    "test:smoke": "npx playwright test -c ./playwright.config.smoke.js",
+    "test:regression": "npx playwright test -c ./playwright.config.regression.js"
+  },
   "keywords": [],
   "author": "",
   "type": "module",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.39.0",
-    "@types/node": "^20.8.9"
+    "@types/node": "^20.8.9",
+    "eslint": "^8.53.0",
+    "prettier": "3.0.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
   }
 }
