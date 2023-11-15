@@ -13,7 +13,7 @@ async function createUser(data) {
   return response;
 }
 
-test("Create user", async () => {
+test("Create user @T4306043f", async () => {
   const res = await createUser(USERS.ANNA_HRITSKOVA);
   const body = await res.json();
 });
