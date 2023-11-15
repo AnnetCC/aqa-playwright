@@ -6,4 +6,4 @@ export const USERS = {
     password: "HelloWorld97",
     repeatPassword: "HelloWorld97"
   }
-};
+}
