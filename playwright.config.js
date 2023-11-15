@@ -1,6 +1,6 @@
 // @ts-check
-import {defineConfig, devices, test} from "@playwright/test";
-import {testConfig} from "./config/testConfig.js";
+import { defineConfig, devices, test } from "@playwright/test"
+import { testConfig } from "./config/testConfig.js"
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
@@ -106,4 +106,4 @@ export default defineConfig({
   //   url: 'http://127.0.0.1:3000',
   //   reuseExistingServer: !process.env.CI,
   // },
-});
+})
