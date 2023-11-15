@@ -1,6 +1,6 @@
 // @ts-check
-import { defineConfig, devices } from "@playwright/test"
-import { testConfig } from "./config/testConfig.js"
+import {defineConfig, devices, test} from "@playwright/test";
+import {testConfig} from "./config/testConfig.js";
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
@@ -19,7 +19,16 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   timeout: 240_000,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [["html", { open: "never" }]],
+  reporter: [
+    ["dot"],
+    [
+      "@testomatio/reporter/lib/adapter/playwright.js",
+      {
+        apiKey: testConfig.reporters.testomat.key
+      }
+    ]
+  ],
+  // ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     headless: true,
@@ -34,6 +43,10 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
+      name: "setup",
+      testMatch: "**/setup/**/*.setup.js"
+    },
+    {
       name: "chromium",
       use: {
         ...devices["Desktop Chrome"],
@@ -41,7 +54,8 @@ export default defineConfig({
           mode: "only-on-failure",
           fullPage: true
         }
-      }
+      },
+      dependencies: ["setup"]
     },
     {
       name: "firefox",
@@ -51,7 +65,8 @@ export default defineConfig({
           mode: "only-on-failure",
           fullPage: true
         }
-      }
+      },
+      dependencies: ["setup"]
     }
     // {
     //     name: 'webkit',
@@ -91,4 +106,4 @@ export default defineConfig({
   //   url: 'http://127.0.0.1:3000',
   //   reuseExistingServer: !process.env.CI,
   // },
-})
+});
