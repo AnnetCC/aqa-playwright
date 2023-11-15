@@ -1,6 +1,6 @@
-import dotenv from "dotenv";
+import dotenv from "dotenv"
 
-dotenv.config();
+dotenv.config()
 
 export const testConfig = {
   baseURL: process.env.BASE_URL,
@@ -13,4 +13,4 @@ export const testConfig = {
       key: process.env.TESTOMAT_KEY
     }
   }
-};
+}
