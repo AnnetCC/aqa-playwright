@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test"
-import { test } from "../src/fixtures/garage.fixtures.js"
+import { test } from "../src/fixtures/test.fixtures.js"
 
 test.describe("Test garage page @Sadb7a718", () => {
   test("Verify that label Garage exists @T732cfb5c", async ({ userGaragePage }) => {
