@@ -1,6 +1,6 @@
 // @ts-check
-import { defineConfig, devices, test } from "@playwright/test"
-import { testConfig } from "./config/testConfig.js"
+import {defineConfig, devices, test} from "@playwright/test"
+import {testConfig} from "./config/testConfig.js"
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
@@ -48,6 +48,12 @@ export default defineConfig({
       teardown: "teardown"
     },
     {
+      name: "api",
+      testMatch: "**/api/**/*.spec.js",
+      dependencies: ["setup"],
+      teardown: "teardown"
+    },
+    {
       name: "teardown",
       testMatch: "**/teardown/**/*.teardown.js"
     },
@@ -60,7 +66,8 @@ export default defineConfig({
           fullPage: true
         }
       },
-      dependencies: ["setup"]
+      dependencies: ["setup"],
+      testIgnore: "tests/api/**/*.spec.js"
     },
     {
       name: "firefox",

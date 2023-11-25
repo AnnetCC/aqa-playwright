@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npx playwright test",
+    "test:api": "npx playwright test --project=api",
     "test:smoke": "npx playwright test -c ./playwright.config.smoke.js",
     "test:regression": "npx playwright test -c ./playwright.config.regression.js"
   },
@@ -20,6 +21,9 @@
     "prettier": "3.0.3"
   },
   "dependencies": {
-    "dotenv": "^16.3.1"
+    "axios": "^1.6.2",
+    "axios-cookiejar-support": "^4.0.7",
+    "dotenv": "^16.3.1",
+    "tough-cookie": "^4.1.3"
   }
 }
