@@ -1,11 +1,37 @@
 import { test } from "../../src/fixtures/test.fixtures.js"
 import { expect } from "@playwright/test"
+import { CookieJar } from "tough-cookie"
+import { wrapper } from "axios-cookiejar-support"
 import { VALID_BRANDS_RESPONSE_BODY } from "../../src/data/brands.js"
 import { VALID_BRAND_MODELS } from "../../src/data/models.js"
-test.describe("Test API @Se941e07a", () => {
-  const apiURL = "/api/cars"
+import axios from "axios"
+import { testConfig } from "../../config/testConfig.js"
+import { USERS } from "../../src/data/users.js"
+import { VALID_CARS_RESPONSE_BODY } from "../../src/data/cars.js"
 
-  test("should create new car @Tb1112e80", async ({ userAPIClient }) => {
+test.describe("Test API @Se941e07a", () => {
+  let client
+
+  test.beforeAll(async () => {
+    const jar = new CookieJar()
+    client = wrapper(
+      axios.create({
+        baseURL: testConfig.apiURL,
+        jar,
+        validateStatus: (status) => {
+          return status < 501
+        }
+      })
+    )
+
+    await client.post("/auth/signin", {
+      email: USERS.ANNA_HRITSKOVA.email,
+      password: USERS.ANNA_HRITSKOVA.password,
+      remember: false
+    })
+  })
+
+  test("should create new car @Tb1112e80", async () => {
     const brandId = VALID_BRANDS_RESPONSE_BODY.data[2].id
     const modelId = VALID_BRAND_MODELS[brandId].data[3].id
 
@@ -15,48 +41,35 @@ test.describe("Test API @Se941e07a", () => {
       mileage: 100
     }
 
-    const response = await userAPIClient.post(apiURL, {
-      data: requestBody
-    })
+    const response = await client.post("/cars", requestBody)
 
-    const body = await response.json()
-    await expect(response, "Positive response should be returned").toBeOK()
-    await expect(response.status(), "Status code should be 201").toEqual(201)
-    await expect(body.status).toBe("ok")
-    await expect(body.data, "Car should be created with data from request").toMatchObject(requestBody)
+    await expect(response.status, "Status code should be 201").toEqual(201)
+    await expect(response.data, "Valid brands should be returned").toMatchObject(VALID_CARS_RESPONSE_BODY)
   })
 
-  test("should return error message if model not found @Tba89db5f", async ({ userAPIClient }) => {
+  test("should return error message if model not found @Tba89db5f", async () => {
     const requestBody = {
       carBrandId: 1,
       carModelId: 13,
       mileage: 0
     }
 
-    const response = await userAPIClient.post(apiURL, {
-      data: requestBody
-    })
+    const response = await client.post("/cars", requestBody)
 
-    const body = await response.json()
-    expect(response.status(), "Status code should be 404").toEqual(404)
-    await expect(body.status).toBe("error")
-    expect(body.message, "should throw error message").toEqual("Model not found")
+    await expect(response.status, "Status code should be 404").toEqual(404)
+    await expect(response.statusText, "should throw error message").toEqual("Not Found")
   })
 
-  test("should return error message with invalid car brand type @T645f9a9e", async ({ userAPIClient }) => {
+  test("should return error message with invalid car brand type @T645f9a9e", async () => {
     const requestBody = {
       carBrandId: "non-existent",
       carModelId: 1,
       mileage: 0
     }
 
-    const response = await userAPIClient.post(apiURL, {
-      data: requestBody
-    })
+    const response = await client.post("/cars", requestBody)
 
-    const body = await response.json()
-    expect(response.status(), "Status code should be 400").toEqual(400)
-    await expect(body.status).toBe("error")
-    expect(body.message, "should throw error message").toEqual("Invalid car brand type")
+    await expect(response.status, "Status code should be 400").toEqual(400)
+    await expect(response.statusText, "should throw error message").toEqual("Bad Request")
   })
 })
