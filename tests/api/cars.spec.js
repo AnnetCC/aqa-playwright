@@ -1,13 +1,13 @@
-import { test } from "../../src/fixtures/test.fixtures.js"
-import { expect } from "@playwright/test"
-import { CookieJar } from "tough-cookie"
-import { wrapper } from "axios-cookiejar-support"
-import { VALID_BRANDS_RESPONSE_BODY } from "../../src/data/brands.js"
-import { VALID_BRAND_MODELS } from "../../src/data/models.js"
+import {test} from "../../src/fixtures/test.fixtures.js"
+import {expect} from "@playwright/test"
+import {CookieJar} from "tough-cookie"
+import {wrapper} from "axios-cookiejar-support"
+import {VALID_BRANDS_RESPONSE_BODY} from "../../src/data/brands.js"
+import {VALID_BRAND_MODELS} from "../../src/data/models.js"
 import axios from "axios"
-import { testConfig } from "../../config/testConfig.js"
-import { USERS } from "../../src/data/users.js"
-import { VALID_CARS_RESPONSE_BODY } from "../../src/data/cars.js"
+import {testConfig} from "../../config/testConfig.js"
+import {USERS} from "../../src/data/users.js"
+import {VALID_CARS_RESPONSE_BODY} from "./fixtures/cars.js"
 
 test.describe("Test API @Se941e07a", () => {
   let client
@@ -55,9 +55,9 @@ test.describe("Test API @Se941e07a", () => {
     }
 
     const response = await client.post("/cars", requestBody)
-
+    console.log(response.data.message)
     await expect(response.status, "Status code should be 404").toEqual(404)
-    await expect(response.statusText, "should throw error message").toEqual("Not Found")
+    await expect(response.data.message, "should throw error message").toEqual("Model not found")
   })
 
   test("should return error message with invalid car brand type @T645f9a9e", async () => {
@@ -70,6 +70,6 @@ test.describe("Test API @Se941e07a", () => {
     const response = await client.post("/cars", requestBody)
 
     await expect(response.status, "Status code should be 400").toEqual(400)
-    await expect(response.statusText, "should throw error message").toEqual("Bad Request")
+    await expect(response.data.message, "should throw error message").toEqual("Invalid car brand type")
   })
 })
