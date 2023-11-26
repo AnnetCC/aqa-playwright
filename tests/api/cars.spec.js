@@ -55,7 +55,7 @@ test.describe("Test API @Se941e07a", () => {
     }
 
     const response = await client.post("/cars", requestBody)
-    console.log(response.data.message)
+
     await expect(response.status, "Status code should be 404").toEqual(404)
     await expect(response.data.message, "should throw error message").toEqual("Model not found")
   })
