@@ -1,19 +1,8 @@
 import { test } from "@playwright/test"
-import { testConfig } from "../../config/testConfig.js"
 import { USERS } from "../../src/data/users.js"
+import AuthController from "../../src/pageObjects/controllers/AuthController.js"
 
-async function createUser (data) {
-  const response = await fetch(`${testConfig.baseURL}/api/auth/signup`, {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json"
-    }
-  })
-  return response
-}
-
-test("Create user @T4306043f", async () => {
-  const res = await createUser(USERS.ANNA_HRITSKOVA)
-  const body = await res.json()
+test("Create user Anna Hritskova @T4306043f", async () => {
+  const authController = new AuthController()
+  const response = await authController.signUp(USERS.ANNA_HRITSKOVA)
 })
