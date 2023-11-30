@@ -1,6 +1,6 @@
 // @ts-check
-import {defineConfig, devices, test} from "@playwright/test"
-import {testConfig} from "./config/testConfig.js"
+import { defineConfig, devices, test } from "@playwright/test"
+import { testConfig } from "./config/testConfig.js"
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
@@ -20,7 +20,7 @@ export default defineConfig({
   timeout: 240_000,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ["html"],
+    ["dot"],
     [
       "@testomatio/reporter/lib/adapter/playwright.js",
       {
@@ -48,14 +48,22 @@ export default defineConfig({
       teardown: "teardown"
     },
     {
+      name: "setup-api",
+      testMatch: "**/api/**/setup/**/*.setup.js"
+    },
+    {
       name: "api",
       testMatch: "**/api/**/*.spec.js",
-      dependencies: ["setup"],
-      teardown: "teardown"
+      dependencies: ["setup-api"],
+      teardown: "teardown-api"
     },
     {
       name: "teardown",
       testMatch: "**/teardown/**/*.teardown.js"
+    },
+    {
+      name: "teardown-api",
+      testMatch: "**/api/**/teardown/**/*.teardown.js"
     },
     {
       name: "chromium",
@@ -78,7 +86,8 @@ export default defineConfig({
           fullPage: true
         }
       },
-      dependencies: ["setup"]
+      dependencies: ["setup"],
+      testIgnore: "tests/api/**/*.spec.js"
     }
     // {
     //     name: 'webkit',

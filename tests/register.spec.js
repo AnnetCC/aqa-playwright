@@ -1,9 +1,9 @@
-import { expect, test } from "@playwright/test"
+import {expect, test} from "@playwright/test"
 import WelcomePage from "../src/pageObjects/welcomePage/WelcomePage.js"
 import RandomCreator from "../src/utils/RandomCreator.js"
-import UserController from "../src/pageObjects/controllers/UserController.js"
 import * as expectedErrors from "./pom/fixtures/register.fixtures.js"
-import { USERS } from "../src/data/users.js"
+import {USERS} from "../src/data/users.js"
+import APIClient from "../src/client/APIClient.js"
 
 test.describe("Test register new user form @regression @smoke @S807c2d82", () => {
   let welcomePage
@@ -18,7 +18,7 @@ test.describe("Test register new user form @regression @smoke @S807c2d82", () =>
     signupRepeatPassword: password
   }
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({page}) => {
     welcomePage = new WelcomePage(page)
 
     await welcomePage.open()
@@ -26,7 +26,7 @@ test.describe("Test register new user form @regression @smoke @S807c2d82", () =>
     signUp = await welcomePage.openSignUpPopup()
   })
 
-  test("Verify that new user can be signed up @T84dc047c", async ({ page }) => {
+  test("Verify that new user can be signed up @T84dc047c", async ({page}) => {
     await signUp.registerNewUser(registerData)
   })
 
@@ -116,8 +116,13 @@ test.describe("Test register new user form @regression @smoke @S807c2d82", () =>
     await signUp.validateErrors(["signupRepeatPassword"], expectedErrors.PASSWORD_MATCH_ERRORS)
   })
 
-  test.afterAll(async ({ request }) => {
-    const userController = new UserController(request, registerData.signupEmail, registerData.signupPassword)
-    await userController.deleteUser()
+  test.afterAll(async () => {
+    const client = await APIClient.authenticate(undefined, {
+      email: registerData.signupEmail,
+      password: registerData.signupPassword,
+      remember: false
+    })
+
+    await client.user.deleteCurrentUser()
   })
 })
