@@ -1,31 +1,28 @@
-import { expect, test } from "@playwright/test"
+import {expect, test} from "@playwright/test"
 import APIClient from "../../src/client/APIClient.js"
-import { API_USERS } from "../../src/data/users.js"
-import { VALID_GET_CARS_RESPONSE_BODY } from "./fixtures/responseCars.js"
-import { VALID_BRANDS_RESPONSE_BODY } from "../../src/data/brands.js"
-import { VALID_MODELS } from "../../src/data/models.js"
-import { USER_CARS_REQUEST_BODY as userCars } from "./fixtures/requestCars.js"
+import {API_USERS} from "../../src/data/users.js"
+import {VALID_GET_CARS_RESPONSE_BODY} from "./fixtures/responseCars.js"
+import {VALID_BRANDS_RESPONSE_BODY} from "../../src/data/brands.js"
+import {VALID_MODELS} from "../../src/data/models.js"
+import {USER_CARS_REQUEST_BODY as userCars} from "./fixtures/requestCars.js"
 
 test.describe("Test GET request @S936954d7", () => {
   let client
-  let client_not_authtorized
+  let clientNotAuthorized
 
   test.beforeAll(async () => {
     client = await APIClient.authenticate(undefined, {
       email: API_USERS.STEPAN_BANDERA.email,
       password: API_USERS.STEPAN_BANDERA.password
     })
-    client_not_authtorized = await APIClient.authenticate(undefined, {
-      email: "aqa-non-existent.com",
-      password: "any97"
-    })
+    clientNotAuthorized = new APIClient()
 
     for (const userCar of userCars) {
       await client.cars.addCar(userCar)
     }
   })
 
-  test("should current users cars @T3888a507", async () => {
+  test("should get current users cars @T3888a507", async () => {
     const response = await client.cars.getUserCars()
 
     response.data.data.sort((a, b) => a.id - b.id)
@@ -35,15 +32,17 @@ test.describe("Test GET request @S936954d7", () => {
   })
 
   test("should throw error message if user is not authorized @T5610d53e", async () => {
-    const response = await client_not_authtorized.cars.getUserCars()
+    const response = await clientNotAuthorized.cars.getUserCars()
 
     await expect(response.status, "Status code should be 401").toEqual(401)
     await expect(response.data.message, "Error message should be returned").toEqual("Not authenticated")
   })
 
-  test("should current users cars by id @Te96eabee", async () => {
-    const carIds = await client.cars.getUserCarsIds()
-    const response = await client.cars.getUserCarById(carIds[0])
+  test("should get current users cars by id @Te96eabee", async () => {
+    const cars = await client.cars.getUserCars()
+    cars.data.data.sort((a, b) => a.id - b.id)
+
+    const response = await client.cars.getUserCarById(cars.data.data[0].id)
 
     await expect(response.status, "Status code should be 200").toEqual(200)
     await expect(response.data.data, "Valid car should be returned").toEqual(VALID_GET_CARS_RESPONSE_BODY.data[0])
@@ -99,9 +98,9 @@ test.describe("Test GET request @S936954d7", () => {
   })
 
   test.afterAll(async () => {
-    const carIds = await client.cars.getUserCarsIds()
-    for (const id of carIds) {
-      await client.cars.deleteCar(id)
+    const response = await client.cars.getUserCars()
+    for (const car of response.data.data) {
+      await client.cars.deleteCar(car.id)
     }
   })
 })
