@@ -1,4 +1,4 @@
-import { expect } from "@playwright/test"
+import {expect} from "@playwright/test"
 
 export const VALID_POST_CARS_RESPONSE_BODY = {
   status: "ok",
@@ -15,7 +15,6 @@ export const VALID_POST_CARS_RESPONSE_BODY = {
     logo: "ford.png"
   }
 }
-
 export const VALID_GET_CARS_RESPONSE_BODY = {
   status: "ok",
   data: [
