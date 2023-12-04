@@ -35,7 +35,6 @@ export const test = base.extend({
     })
 
     await use(ctx)
-
     await ctx.dispose()
   }
 })

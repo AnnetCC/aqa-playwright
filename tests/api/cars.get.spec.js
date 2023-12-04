@@ -1,14 +1,28 @@
-import {expect, test} from "@playwright/test"
+import { expect, test } from "@playwright/test"
 import APIClient from "../../src/client/APIClient.js"
-import {API_USERS} from "../../src/data/users.js"
-import {VALID_GET_CARS_RESPONSE_BODY} from "./fixtures/responseCars.js"
-import {VALID_BRANDS_RESPONSE_BODY} from "../../src/data/brands.js"
-import {VALID_MODELS} from "../../src/data/models.js"
-import {USER_CARS_REQUEST_BODY as userCars} from "./fixtures/requestCars.js"
+import { API_USERS } from "../../src/data/users.js"
+import { VALID_BRANDS_RESPONSE_BODY } from "../../src/data/brands.js"
+import { VALID_MODELS } from "../../src/data/models.js"
+import { CAR_MODELS } from "./fixtures/requestCars.js"
 
 test.describe("Test GET request @S936954d7", () => {
   let client
   let clientNotAuthorized
+
+  const expectedBody = CAR_MODELS.map((carModel) => {
+    const brand = VALID_BRANDS_RESPONSE_BODY.data.filter((brand) => brand.id === carModel.carBrandId)[0]
+    const model = VALID_MODELS.data.filter((model) => model.id === carModel.carModelId)[0]
+    return {
+      ...carModel,
+      id: expect.any(Number),
+      initialMileage: carModel.mileage,
+      carCreatedAt: expect.any(String),
+      updatedMileageAt: expect.any(String),
+      brand: brand.title,
+      model: model.title,
+      logo: brand.logoFilename
+    }
+  })
 
   test.beforeAll(async () => {
     client = await APIClient.authenticate(undefined, {
@@ -17,8 +31,8 @@ test.describe("Test GET request @S936954d7", () => {
     })
     clientNotAuthorized = new APIClient()
 
-    for (const userCar of userCars) {
-      await client.cars.addCar(userCar)
+    for (const carModel of CAR_MODELS) {
+      await client.cars.addCar(carModel)
     }
   })
 
@@ -28,7 +42,7 @@ test.describe("Test GET request @S936954d7", () => {
     response.data.data.sort((a, b) => a.id - b.id)
 
     await expect(response.status, "Status code should be 200").toEqual(200)
-    await expect(response.data, "Valid cars should be returned").toEqual(VALID_GET_CARS_RESPONSE_BODY)
+    await expect(response.data.data, "Valid cars should be returned").toEqual(expectedBody)
   })
 
   test("should throw error message if user is not authorized @T5610d53e", async () => {
@@ -45,7 +59,7 @@ test.describe("Test GET request @S936954d7", () => {
     const response = await client.cars.getUserCarById(cars.data.data[0].id)
 
     await expect(response.status, "Status code should be 200").toEqual(200)
-    await expect(response.data.data, "Valid car should be returned").toEqual(VALID_GET_CARS_RESPONSE_BODY.data[0])
+    await expect(response.data.data, "Valid car should be returned").toEqual(expectedBody[0])
   })
 
   test("should throw error message with invalid car id @T55d593ba", async () => {
