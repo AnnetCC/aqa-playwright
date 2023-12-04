@@ -1,7 +1,7 @@
-import {expect, test} from "@playwright/test"
+import { expect, test } from "@playwright/test"
 import APIClient from "../../src/client/APIClient.js"
-import {API_USERS} from "../../src/data/users.js"
-import {USER_CARS_REQUEST_BODY as userCars} from "./fixtures/requestCars.js"
+import { API_USERS } from "../../src/data/users.js"
+import { CAR_MODELS as userCars } from "./fixtures/requestCars.js"
 
 test.describe("Test DELETE request @S4a960b94", () => {
   let client
@@ -27,7 +27,7 @@ test.describe("Test DELETE request @S4a960b94", () => {
     const response = await client.cars.deleteCar(firstCar.id)
 
     await expect(response.status, "Status code should be 200").toEqual(200)
-    await expect(response.data, "should delete car").toEqual({data: {carId: firstCar.id}, status: "ok"})
+    await expect(response.data, "should delete car").toEqual({ data: { carId: firstCar.id }, status: "ok" })
   })
 
   test("should throw error message if user not authorized @T8263bda6", async () => {

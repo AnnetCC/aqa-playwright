@@ -1,8 +1,8 @@
-import {expect, test} from "@playwright/test"
+import { expect, test } from "@playwright/test"
 import WelcomePage from "../src/pageObjects/welcomePage/WelcomePage.js"
 import RandomCreator from "../src/utils/RandomCreator.js"
 import * as expectedErrors from "./pom/fixtures/register.fixtures.js"
-import {USERS} from "../src/data/users.js"
+import { USERS } from "../src/data/users.js"
 import APIClient from "../src/client/APIClient.js"
 
 test.describe("Test register new user form @regression @smoke @S807c2d82", () => {
@@ -18,7 +18,7 @@ test.describe("Test register new user form @regression @smoke @S807c2d82", () =>
     signupRepeatPassword: password
   }
 
-  test.beforeEach(async ({page}) => {
+  test.beforeEach(async ({ page }) => {
     welcomePage = new WelcomePage(page)
 
     await welcomePage.open()
@@ -26,7 +26,7 @@ test.describe("Test register new user form @regression @smoke @S807c2d82", () =>
     signUp = await welcomePage.openSignUpPopup()
   })
 
-  test("Verify that new user can be signed up @T84dc047c", async ({page}) => {
+  test("Verify that new user can be signed up @T84dc047c", async ({ page }) => {
     await signUp.registerNewUser(registerData)
   })
 
