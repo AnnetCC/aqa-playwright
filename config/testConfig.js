@@ -6,7 +6,7 @@ export const testConfig = {
   baseURL: process.env.BASE_URL,
   apiURL: process.env.API_URL,
   httpCredentials: {
-    username: process.env.HTTP_CREDENTIAL_USER_NAME,
+    username: process.env.HTTP_CREDENTIAL_USERNAME,
     password: process.env.HTTP_CREDENTIAL_PASSWORD
   }
 }
