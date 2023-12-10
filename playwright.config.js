@@ -17,7 +17,7 @@ export default defineConfig({
   maxFailures: 10,
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
-  timeout: 240_000,
+  timeout: 30000,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [["html"], [process.env.CI ? "github" : "list"]],
   // ],
@@ -37,7 +37,7 @@ export default defineConfig({
     {
       name: "setup",
       testMatch: "**/setup/**/*.setup.js",
-      teardown: "teardown"
+      testIgnore: "**/api/**/setup/**/*.setup.js"
     },
     {
       name: "setup-api",
@@ -48,10 +48,6 @@ export default defineConfig({
       testMatch: "**/api/**/*.spec.js",
       dependencies: ["setup-api"],
       teardown: "teardown-api"
-    },
-    {
-      name: "teardown",
-      testMatch: "**/teardown/**/*.teardown.js"
     },
     {
       name: "teardown-api",
