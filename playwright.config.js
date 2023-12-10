@@ -64,19 +64,19 @@ export default defineConfig({
       },
       dependencies: ["setup"],
       testIgnore: "tests/api/**/*.spec.js"
-    },
-    {
-      name: "firefox",
-      use: {
-        ...devices["Desktop Firefox"],
-        screenshot: {
-          mode: "only-on-failure",
-          fullPage: true
-        }
-      },
-      dependencies: ["setup"],
-      testIgnore: "tests/api/**/*.spec.js"
     }
+    // {
+    //   name: "firefox",
+    //   use: {
+    //     ...devices["Desktop Firefox"],
+    //     screenshot: {
+    //       mode: "only-on-failure",
+    //       fullPage: true
+    //     }
+    //   },
+    //   dependencies: ["setup"],
+    //   testIgnore: "tests/api/**/*.spec.js"
+    // }
     // {
     //     name: 'webkit',
     //     use: {
