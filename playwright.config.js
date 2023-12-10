@@ -1,6 +1,6 @@
 // @ts-check
-import { defineConfig, devices, test } from "@playwright/test"
-import { testConfig } from "./config/testConfig.js"
+import {defineConfig, devices, test} from "@playwright/test"
+import {testConfig} from "./config/testConfig.js"
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
@@ -19,15 +19,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   timeout: 240_000,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [
-    ["dot"],
-    [
-      "@testomatio/reporter/lib/adapter/playwright.js",
-      {
-        apiKey: testConfig.reporters.testomat.key
-      }
-    ]
-  ],
+  reporter: [["html"], [process.env.CI ? "github" : "list"]],
   // ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {

@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  auto-tests:
+    container_name: "aqa-playwright"
+    build:
+      context: .
+      args:
+        HTTP_CREDENTIALS_USERNAME: ${HTTP_CREDENTIALS_USERNAME}
+        HTTP_CREDENTIALS_PASSWORD: ${HTTP_CREDENTIALS_PASSWORD}
