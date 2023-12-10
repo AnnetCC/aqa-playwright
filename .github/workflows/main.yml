@@ -10,6 +10,10 @@ jobs:
         with:
           repository: ${{github.repository}}
           ref: ${{github.ref}}
+      - name: "Use node js"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
       - name: "Copy environment variables"
         run: |
           cp '.env.example.stage' '.env'
