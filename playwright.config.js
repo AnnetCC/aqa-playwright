@@ -5,7 +5,6 @@ import {testConfig} from "./config/testConfig.js"
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
-  testDir: "./tests",
   /* Run tests in files in parallel */
   testMatch: "tests/**/*.spec.js",
   fullyParallel: false,
@@ -16,7 +15,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   maxFailures: 10,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: 2,
   timeout: 30000,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [["html", {open: "never"}], [process.env.CI ? "github" : "list"]],
@@ -27,7 +26,10 @@ export default defineConfig({
     httpCredentials: testConfig.httpCredentials,
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: testConfig.baseURL,
-
+    viewport: {
+      width: 1200,
+      height: 840
+    },
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry"
   },
@@ -64,19 +66,19 @@ export default defineConfig({
       },
       dependencies: ["setup"],
       testIgnore: "tests/api/**/*.spec.js"
+    },
+    {
+      name: "firefox",
+      use: {
+        ...devices["Desktop Firefox"],
+        screenshot: {
+          mode: "only-on-failure",
+          fullPage: true
+        }
+      },
+      dependencies: ["setup"],
+      testIgnore: "tests/api/**/*.spec.js"
     }
-    // {
-    //   name: "firefox",
-    //   use: {
-    //     ...devices["Desktop Firefox"],
-    //     screenshot: {
-    //       mode: "only-on-failure",
-    //       fullPage: true
-    //     }
-    //   },
-    //   dependencies: ["setup"],
-    //   testIgnore: "tests/api/**/*.spec.js"
-    // }
     // {
     //     name: 'webkit',
     //     use: {
