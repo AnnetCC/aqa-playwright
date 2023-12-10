@@ -3,7 +3,7 @@ on: push
 
 jobs:
   tests:
-    runs-on: ubuntu:jammy
+    runs-on: ubuntu-latest
     steps:
       - name: "Checkout to tests repository"
         uses: actions/checkout@v4
