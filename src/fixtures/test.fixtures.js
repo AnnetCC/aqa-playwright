@@ -1,10 +1,10 @@
-import { test as base, request } from "@playwright/test"
+import {test as base, request} from "@playwright/test"
 import GaragePage from "../pageObjects/garagePage/GaragePage.js"
-import { STORAGE_STATE_USER_PATH } from "../data/storageState.js"
+import {STORAGE_STATE_USER_PATH} from "../data/storageState.js"
 import ProfilePage from "../pageObjects/profilePage/ProfilePage.js"
 
 export const test = base.extend({
-  userProfilePage: async ({ browser }, use) => {
+  userProfilePage: async ({browser}, use) => {
     const ctx = await browser.newContext({
       storageState: STORAGE_STATE_USER_PATH
     })
@@ -14,9 +14,9 @@ export const test = base.extend({
 
     await use(profilePage)
 
-    ctx.close()
+    await ctx.close()
   },
-  userGaragePage: async ({ browser }, use) => {
+  userGaragePage: async ({browser}, use) => {
     const ctx = await browser.newContext({
       storageState: STORAGE_STATE_USER_PATH
     })

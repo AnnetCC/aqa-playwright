@@ -1,11 +1,10 @@
 // @ts-check
-import { defineConfig, devices, test } from "@playwright/test"
-import { testConfig } from "./config/testConfig.js"
+import {defineConfig, devices, test} from "@playwright/test"
+import {testConfig} from "./config/testConfig.js"
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
-  testDir: "./tests",
   /* Run tests in files in parallel */
   testMatch: "tests/**/*.spec.js",
   fullyParallel: false,
@@ -16,18 +15,10 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   maxFailures: 10,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
-  timeout: 240_000,
+  workers: 2,
+  timeout: 30000,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [
-    ["dot"],
-    [
-      "@testomatio/reporter/lib/adapter/playwright.js",
-      {
-        apiKey: testConfig.reporters.testomat.key
-      }
-    ]
-  ],
+  reporter: [["html", {open: "never"}], [process.env.CI ? "github" : "list"]],
   // ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -35,7 +26,10 @@ export default defineConfig({
     httpCredentials: testConfig.httpCredentials,
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: testConfig.baseURL,
-
+    viewport: {
+      width: 1200,
+      height: 840
+    },
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry"
   },
@@ -45,7 +39,7 @@ export default defineConfig({
     {
       name: "setup",
       testMatch: "**/setup/**/*.setup.js",
-      teardown: "teardown"
+      testIgnore: "**/api/**/setup/**/*.setup.js"
     },
     {
       name: "setup-api",
@@ -56,10 +50,6 @@ export default defineConfig({
       testMatch: "**/api/**/*.spec.js",
       dependencies: ["setup-api"],
       teardown: "teardown-api"
-    },
-    {
-      name: "teardown",
-      testMatch: "**/teardown/**/*.teardown.js"
     },
     {
       name: "teardown-api",

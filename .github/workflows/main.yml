@@ -1,0 +1,28 @@
+name: "AQA Playwright"
+on: push
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout to tests repository"
+        uses: actions/checkout@v4
+        with:
+          repository: ${{github.repository}}
+          ref: ${{github.ref}}
+      - name: "Use node js"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: "Copy environment variables"
+        run: |
+          cp '.env.example.stage' '.env'
+      - name: "Run tests"
+        run: |
+          HTTP_CREDENTIAL_USERNAME=${{secrets.HTTP_CREDENTIAL_USERNAME}} HTTP_CREDENTIAL_PASSWORD=${{secrets.HTTP_CREDENTIAL_PASSWORD}} docker-compose up --exit-code-from auto-tests
+      - name: "Upload artifacts"
+        if: failure()
+        uses: actions/checkout@v3
+        with:
+          name: test-report
+          path: playwright-report/
