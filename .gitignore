@@ -7,3 +7,4 @@ tests-examples
 .env
 .eslintrc.cjs
 .prettierrc
+state
