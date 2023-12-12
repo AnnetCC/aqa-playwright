@@ -18,8 +18,10 @@ jobs:
         run: |
           cp '.env.example.stage' '.env'
       - name: "Run tests"
-        run: |
-          HTTP_CREDENTIAL_USERNAME=${{secrets.HTTP_CREDENTIAL_USERNAME}} HTTP_CREDENTIAL_PASSWORD=${{secrets.HTTP_CREDENTIAL_PASSWORD}} docker-compose up --exit-code-from auto-tests
+        run: >
+          HTTP_CREDENTIAL_USERNAME=${{secrets.HTTP_CREDENTIAL_USERNAME}} 
+          HTTP_CREDENTIAL_PASSWORD=${{secrets.HTTP_CREDENTIAL_PASSWORD}} 
+          TESTOMAT_KEY=${{secrets.TESTOMAT_KEY}} docker-compose up --exit-code-from auto-tests
       - name: "Upload artifacts"
         if: failure()
         uses: actions/checkout@v3
