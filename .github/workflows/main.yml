@@ -24,7 +24,7 @@ jobs:
           TESTOMAT_KEY=${{secrets.TESTOMAT_KEY}} docker-compose up --exit-code-from auto-tests
       - name: "Upload artifacts"
         if: failure()
-        uses: actions/checkout@v3
+        uses: actions/upload-artifact@v3
         with:
           name: test-report
           path: playwright-report/
